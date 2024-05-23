@@ -1,47 +1,61 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
-  </q-page>
+<div class="q-mx-md">
+  <q-form>
+    <h4>
+      Customer
+    </h4>
+    <hr/>
+    <q-input label="Name" outlined v-model="name" />
+    <h4>
+      Items
+    </h4>
+    <hr/>
+    <div>
+      <div class="text-body1 q-mb-lg">
+        Do you want to insure items?
+      </div>
+      <q-btn-toggle
+        v-model="showItems"
+        :options="[{label:'Yes', value: true}, {label:'No', value: false}]"
+        toggle-color="primary"
+      />
+      <div v-if="showItems" class="q-pa-md">
+        <div v-for="item in items" :key="item.id" class="row items-center">
+          <q-input class="q-mb-lg" :key="item.id" v-model="item.name" :label="`Item ${item.id}`" />
+          <q-btn dense flat icon="close" size="sm" @click="items = items.filter(el => el.id != item.id)" />
+        </div>
+        <q-btn @click="items.push({ name: '', id: items.length + 1 })" size="md" icon="add">
+          <template #default>
+            <div class="q-pa-sm">
+              Add another
+            </div>
+          </template>
+        </q-btn>
+      </div>
+    </div>
+  </q-form>
+</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+  import { ref } from 'vue';
 
-defineOptions({
-  name: 'IndexPage'
-});
+  const name = ref('')
+  const showItems = ref(true)
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
-  }
-]);
+  const items = ref([{name: '', id: 1}])
 
-const meta = ref<Meta>({
-  totalCount: 1200
-});
 </script>
+
+<style lang="scss" scoped>
+
+hr {
+  height: 0.1rem;
+  background-color: $dark;
+  margin-bottom: 2rem;
+}
+h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.9rem;
+}
+</style>
