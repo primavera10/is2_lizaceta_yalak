@@ -22,9 +22,9 @@
       <div v-if="showItems" class="q-pa-md">
         <div v-for="item in items" :key="item.id" class="row items-center">
           <q-input class="q-mb-lg" :key="item.id" v-model="item.name" :label="`Item ${item.id}`" />
-          <q-btn dense flat icon="close" size="sm" @click="items = items.filter(el => el.id != item.id)" />
+          <q-btn dense flat icon="close" size="sm" @click="deleteItem(item)" />
         </div>
-        <q-btn @click="items.push({ name: '', id: items.length + 1 })" size="md" icon="add">
+        <q-btn @click="items.push({ name: '', id: items.length + 1 })" size="md" icon="add" class="q-mt-sm">
           <template #default>
             <div class="q-pa-sm">
               Add another
@@ -33,17 +33,49 @@
         </q-btn>
       </div>
     </div>
+    <h4>
+      Policy
+    </h4>
+    <hr/>
+    <div class="text-body1 q-mb-md">
+      Start date
+    </div>
+    <q-date v-model="startDate" :options="dateOptions"/>
+
   </q-form>
 </div>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { date } from 'quasar'
+  import { ref, computed } from 'vue';
+  import  { Item, Items } from 'components/models'
 
   const name = ref('')
   const showItems = ref(true)
 
-  const items = ref([{name: '', id: 1}])
+  const items = ref<Items>([{name: '', id: 1}])
+
+  const startDate = ref(date.formatDate(Date.now(), 'YYYY/MM/DD'))
+
+  const dateOptions = computed(() => {
+    const rangeDates = []
+    for (let i = 0; i <= 15; i++){
+      const thisDate = new Date()
+      thisDate.setDate(thisDate.getDate() + i)
+      rangeDates.push(date.formatDate(thisDate, 'YYYY/MM/DD'))
+    }
+    return rangeDates
+  })
+
+  function deleteItem(item: Item){
+   items.value = items.value.filter(el => el.id != item.id).map((el, i) => {
+     return {
+       ...el,
+       id: i+1
+     }
+   })
+  }
 
 </script>
 

@@ -6,3 +6,10 @@ export interface Todo {
 export interface Meta {
   totalCount: number;
 }
+
+export interface Item {
+  id : number,
+  name: string
+}
+
+export type Items = Item[]
