@@ -1,6 +1,6 @@
 <template>
 <div class="q-mx-md">
-  <q-form>
+  <q-form @submit="submitForm">
     <h4>
       Customer
     </h4>
@@ -48,8 +48,12 @@
     <div class="text-body1 q-mb-sm">
       Excess
     </div>
-    <div class="q-gutter-sm">
+    <div class="q-gutter-sm q-mb-lg">
       <q-radio v-for="excess in excesses" :key="excess" :val="excess" :label="excess" v-model="selectedExcess" />
+    </div>
+    <hr/>
+    <div class="submit-wrapper">
+      <q-btn size="lg" type="submit" color="primary"> Submit </q-btn>
     </div>
   </q-form>
 </div>
@@ -92,6 +96,17 @@
    })
   }
 
+  function submitForm(){
+    const data = {
+      name: name.value,
+      itemsToInsure: showItems.value ? items.value : '',
+      selectedLOI: selectedLOI.value,
+      selectedExcess: selectedExcess.value,
+      startDate: startDate.value
+    }
+    console.log(JSON.stringify(data))
+  }
+
 </script>
 
 <style lang="scss" scoped>
@@ -104,5 +119,11 @@ hr {
 h4 {
   margin-top: 1.5rem;
   margin-bottom: 0.9rem;
+}
+.submit-wrapper{
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-bottom: 24px;
 }
 </style>
