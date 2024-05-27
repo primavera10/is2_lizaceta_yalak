@@ -40,8 +40,17 @@
     <div class="text-body1 q-mb-md">
       Start date
     </div>
-    <q-date v-model="startDate" :options="dateOptions"/>
-
+    <q-date class="q-mb-lg" v-model="startDate" :options="dateOptions"/>
+    <div class="text-body1 q-mb-sm">
+      Limit of indemnity
+    </div>
+    <q-select class="q-mb-lg" :option-disable="option => option === LOIs[0]" v-model="selectedLOI" :options="LOIs"/>
+    <div class="text-body1 q-mb-sm">
+      Excess
+    </div>
+    <div class="q-gutter-sm">
+      <q-radio v-for="excess in excesses" :key="excess" :val="excess" :label="excess" v-model="selectedExcess" />
+    </div>
   </q-form>
 </div>
 </template>
@@ -52,11 +61,17 @@
   import  { Item, Items } from 'components/models'
 
   const name = ref('')
-  const showItems = ref(true)
 
+  const showItems = ref(true)
   const items = ref<Items>([{name: '', id: 1}])
 
   const startDate = ref(date.formatDate(Date.now(), 'YYYY/MM/DD'))
+
+  const LOIs = ['Please select', '£1,000,000', '£2,000,000', '£5,000,000']
+  const selectedLOI = ref(LOIs[0])
+
+  const excesses = ['£250', '£500', '£1000']
+  const selectedExcess = ref('')
 
   const dateOptions = computed(() => {
     const rangeDates = []
