@@ -104,7 +104,7 @@
       selectedExcess: selectedExcess.value,
       startDate: startDate.value
     }
-    console.log(JSON.stringify(data))
+    alert(JSON.stringify(data, null, 2))
   }
 
 </script>
