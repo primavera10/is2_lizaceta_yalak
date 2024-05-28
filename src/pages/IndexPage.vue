@@ -1,9 +1,15 @@
 <template>
   <div class="q-mx-md">
-    <q-form @submit="submitForm">
+    <q-form ref="formRef" @submit="submitForm" @reset="reset">
       <h4>{{ t('customer') }}</h4>
       <hr />
-      <q-input :label="t('name')" outlined v-model="name" />
+      <q-input
+        ref="nameInputRef"
+        :rules="[(val) => val.trim().length > 0 || t('enterName')]"
+        :label="t('name')"
+        outlined
+        v-model="name"
+      />
       <h4>{{ t('items') }}</h4>
       <hr />
       <div>
@@ -23,6 +29,7 @@
               :key="item.id"
               v-model="item.name"
               :label="t('item', item.id)"
+              :rules="[(val) => (val && val.length > 0) || t('enterItemName')]"
             />
             <q-btn
               dense
@@ -47,37 +54,60 @@
       <h4>{{ t('policy') }}</h4>
       <hr />
       <div class="text-body1 q-mb-md">{{ t('startDate') }}</div>
-      <q-date class="q-mb-lg" v-model="startDate" :options="dateOptions" />
+      <q-field
+        v-model="startDate"
+        borderless
+        class="q-mb-lg"
+        :rules="[(val) => !!val || t('pickDate')]"
+      >
+        <template #control>
+          <q-date v-model="startDate" :options="dateOptions" />
+        </template>
+      </q-field>
       <div class="text-body1 q-mb-sm">{{ t('LOI') }}</div>
       <q-select
         class="q-mb-lg"
         :option-disable="(option) => option === LOIs[0]"
         v-model="selectedLOI"
         :options="LOIs"
+        :rules="[(val) => val !== LOIs[0] || t('selectLOI')]"
       />
       <div class="text-body1 q-mb-sm">{{ t('excess') }}</div>
-      <div class="q-gutter-sm q-mb-lg">
-        <q-radio
-          v-for="excess in excesses"
-          :key="excess"
-          :val="excess"
-          :label="excess"
-          v-model="selectedExcess"
-        />
-      </div>
+      <q-field
+        v-model="selectedExcess"
+        borderless
+        class="q-mb-lg"
+        :rules="[(val) => excesses.includes(val) || t('selectExcess')]"
+      >
+        <template #control>
+          <q-radio
+            class="q-mr-sm"
+            v-for="excess in excesses"
+            :key="excess"
+            :val="excess"
+            :label="excess"
+            v-model="selectedExcess"
+          />
+        </template>
+      </q-field>
       <hr />
       <div class="submit-wrapper">
-        <q-btn size="lg" type="submit" color="primary"> {{ t('submit') }} </q-btn>
+        <q-btn size="lg" type="submit" color="primary">
+          {{ t('submit') }}
+        </q-btn>
       </div>
     </q-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { date } from 'quasar';
+import { date, QForm, useQuasar } from 'quasar';
 import { ref, computed } from 'vue';
 import { Item, Items } from 'components/models';
 import { useI18n } from 'vue-i18n';
+
+const { notify } = useQuasar();
+const formRef = ref<QForm | null>(null);
 
 const { t } = useI18n();
 
@@ -117,13 +147,31 @@ function deleteItem(item: Item) {
 
 function submitForm() {
   const data = {
-    name: name.value,
+    name: name.value.trim(),
     itemsToInsure: showItems.value ? items.value : '',
     selectedLOI: selectedLOI.value,
     selectedExcess: selectedExcess.value,
     startDate: startDate.value,
   };
-  alert(JSON.stringify(data, null, 2));
+  notify({
+    color: 'green-4',
+    textColor: 'white',
+    icon: 'cloud_done',
+    message: t('submitted'),
+  });
+  console.log(JSON.stringify(data, null, 2));
+  if (formRef.value) {
+    formRef.value.reset();
+  }
+}
+
+function reset() {
+  name.value = '';
+  items.value = [{ name: '', id: 1 }];
+  showItems.value = true;
+  selectedLOI.value = LOIs[0];
+  selectedExcess.value = '';
+  startDate.value = date.formatDate(Date.now(), 'YYYY/MM/DD');
 }
 </script>
 

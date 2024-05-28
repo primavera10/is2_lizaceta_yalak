@@ -12,5 +12,11 @@ export default {
   LOI: 'Limit of indemnity',
   pleaseSelect: 'Please select',
   excess: 'Excess',
-  submit: 'Submit'
-}
+  submit: 'Submit',
+  enterName: 'Please enter your name',
+  enterItemName: 'Please enter item name',
+  pickDate: 'Please pick a date',
+  selectLOI: 'Please select a limit of indemnity',
+  selectExcess: 'Please select an excess',
+  submitted: 'Submitted!',
+};
