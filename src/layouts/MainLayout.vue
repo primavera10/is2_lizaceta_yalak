@@ -2,10 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-toolbar-title> Quasar App </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
@@ -18,10 +15,7 @@
 </template>
 
 <script setup lang="ts">
-
 defineOptions({
-  name: 'MainLayout'
+  name: 'MainLayout',
 });
-
-
 </script>

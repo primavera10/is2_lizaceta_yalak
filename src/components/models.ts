@@ -8,8 +8,8 @@ export interface Meta {
 }
 
 export interface Item {
-  id : number,
-  name: string
+  id: number;
+  name: string;
 }
 
-export type Items = Item[]
+export type Items = Item[];
